@@ -516,15 +516,15 @@
     color: var(--ink);
   }
   .hint { margin-top: 8px; font-size: .98rem; color: var(--ink-soft); }
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px 6px;
+  /* Restaurantliste: echte Checkboxen, die ganze Zeile ist tippbar */
+  .places {
+    display: grid;
+    gap: 8px;
     margin-top: 18px;
+    text-align: left;
   }
-  .chip { position: relative; display: inline-flex; border-radius: 999px; }
-  .chip input {
+  .place { position: relative; display: block; border-radius: 16px; }
+  .place input {
     -webkit-appearance: none;
     appearance: none;
     position: absolute;
@@ -533,26 +533,37 @@
     width: 100%;
     height: 100%;
     margin: 0;
-    border-radius: 999px;
+    border-radius: 16px;
     opacity: 0;
     cursor: pointer;
     touch-action: manipulation;
   }
-  .chip-face {
-    display: inline-flex;
+  .place-face {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
-    gap: 7px;
-    min-height: 44px;
-    padding: 9px 14px 9px 10px;
-    border-radius: 999px;
+    gap: 12px;
+    min-height: 56px;
+    padding: 10px 14px 10px 12px;
+    border-radius: 16px;
     border: 1px solid var(--line);
     background: rgba(255, 255, 255, .58);
     color: var(--ink);
-    font-size: 1rem;
-    line-height: 1.2;
     transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease, transform .12s ease;
   }
-  .chip-surprise .chip-face { border-style: dashed; border-color: rgba(35, 48, 41, .32); }
+  .place-text { display: grid; gap: 1px; min-width: 0; }
+  .place-name { font-size: 1.04rem; font-weight: 500; line-height: 1.25; }
+  .place-meta { font-size: .86rem; line-height: 1.3; color: var(--ink-soft); }
+  .place-rating {
+    white-space: nowrap;
+    font-size: .92rem;
+    font-weight: 500;
+    color: var(--ink-mid);
+    font-variant-numeric: tabular-nums;
+  }
+  .place-rating .star { color: var(--rose-deep); margin-right: 1px; }
+  .place-surprise .place-face { border-style: dashed; border-color: rgba(35, 48, 41, .32); }
+  .places-note { margin-top: 10px; font-size: .84rem; line-height: 1.4; color: var(--ink-soft); }
   .chip-mark {
     flex: none;
     display: grid;
@@ -565,23 +576,23 @@
     transition: background-color .2s ease, border-color .2s ease;
   }
   .chip-mark svg { width: 12px; height: 12px; transform: scale(0); transition: transform .25s cubic-bezier(.3, 1.6, .5, 1); }
-  .chip input:checked + .chip-face {
+  .place input:checked + .place-face {
     background: var(--blush);
     border-color: var(--rose);
     border-style: solid;
-    color: var(--rose-deep);
     box-shadow: 0 8px 16px -12px rgba(154, 63, 85, .75);
   }
-  .chip input:checked + .chip-face .chip-mark { background: var(--rose); border-color: var(--rose); }
-  .chip input:checked + .chip-face .chip-mark svg { transform: scale(1); }
-  .chip input:focus-visible + .chip-face { outline: 3px solid var(--focus); outline-offset: 2px; }
-  .chip input:active + .chip-face { transform: scale(.97); }
+  .place input:checked + .place-face .place-name { color: var(--rose-deep); }
+  .place input:checked + .place-face .chip-mark { background: var(--rose); border-color: var(--rose); }
+  .place input:checked + .place-face .chip-mark svg { transform: scale(1); }
+  .place input:focus-visible + .place-face { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .place input:active + .place-face { transform: scale(.985); }
   @media (hover: hover) {
-    .chip:hover .chip-face { border-color: var(--eucalyptus); }
-    .chip:hover input:checked + .chip-face { border-color: var(--rose-deep); }
+    .place:hover .place-face { border-color: var(--eucalyptus); }
+    .place:hover input:checked + .place-face { border-color: var(--rose-deep); }
   }
   @media (forced-colors: active) {
-    .chip input:checked + .chip-face { outline: 3px solid Highlight; }
+    .place input:checked + .place-face { outline: 3px solid Highlight; }
   }
 
   .fields { display: grid; gap: 12px; margin-top: 20px; text-align: left; }
@@ -919,23 +930,23 @@
 
       <fieldset class="foods" aria-describedby="food-hint">
         <legend><h1 class="step-title" id="food-title" tabindex="-1" data-heading>Worauf hast du Lust?</h1></legend>
-        <p class="hint" id="food-hint">Such dir ruhig mehrere aus, den Rest mache ich.</p>
+        <p class="hint" id="food-hint">Das sind die bestbewerteten Restaurants in Heilbronn. Such dir ruhig mehrere aus, den Rest mache ich.</p>
 
-        <div class="chips">
-          <label class="chip"><input type="checkbox" name="food" id="food-steak" value="Steak"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Steak</span></label>
-          <label class="chip"><input type="checkbox" name="food" id="food-sushi" value="Sushi"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sushi</span></label>
-          <label class="chip"><input type="checkbox" name="food" id="food-italienisch" value="Italienisch"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Italienisch</span></label>
-          <label class="chip"><input type="checkbox" name="food" id="food-burger" value="Burger"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Burger</span></label>
-          <label class="chip"><input type="checkbox" name="food" id="food-asiatisch" value="Asiatisch"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Asiatisch</span></label>
-          <label class="chip"><input type="checkbox" name="food" id="food-thai" value="Thai"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Thai</span></label>
-          <label class="chip"><input type="checkbox" name="food" id="food-griechisch" value="Griechisch"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Griechisch</span></label>
-          <label class="chip"><input type="checkbox" name="food" id="food-mexikanisch" value="Mexikanisch"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Mexikanisch</span></label>
-          <label class="chip"><input type="checkbox" name="food" id="food-indisch" value="Indisch"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Indisch</span></label>
-          <label class="chip"><input type="checkbox" name="food" id="food-tapas" value="Tapas"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Tapas</span></label>
-          <label class="chip"><input type="checkbox" name="food" id="food-fisch" value="Fisch &amp; Meeresfrüchte"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Fisch &amp; Meeresfrüchte</span></label>
-          <label class="chip"><input type="checkbox" name="food" id="food-vegetarisch" value="Vegetarisch"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Vegetarisch</span></label>
-          <label class="chip chip-surprise"><input type="checkbox" name="food" id="food-ueberrasch" value="Überrasch mich"><span class="chip-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Überrasch mich</span></label>
+        <div class="places">
+          <label class="place"><input type="checkbox" name="food" id="food-bachmaier" value="Bachmaier"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Bachmaier</span><span class="place-meta">Feine Marktküche mit Neckarblick · Guide Michelin</span></span><span class="place-rating"><span class="star" aria-hidden="true">★</span> 4,8<span class="sr-only"> Sterne</span></span></span></label>
+          <label class="place"><input type="checkbox" name="food" id="food-magnifico" value="Magnifico da Umberto"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Magnifico da Umberto</span><span class="place-meta">Italienisch · im 12. Stock mit Blick über die Stadt</span></span><span class="place-rating"><span class="star" aria-hidden="true">★</span> 4,6<span class="sr-only"> Sterne</span></span></span></label>
+          <label class="place"><input type="checkbox" name="food" id="food-ratskeller" value="Ratskeller"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Ratskeller</span><span class="place-meta">Schwäbisch &amp; mediterran · Gewölbekeller unterm Rathaus</span></span><span class="place-rating"><span class="star" aria-hidden="true">★</span> 4,6<span class="sr-only"> Sterne</span></span></span></label>
+          <label class="place"><input type="checkbox" name="food" id="food-blackbones" value="Blackbones Steakhouse"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Blackbones Steakhouse</span><span class="place-meta">Steak · Dry Aged Beef aus eigener Reifung</span></span><span class="place-rating"><span class="star" aria-hidden="true">★</span> 4,3<span class="sr-only"> Sterne</span></span></span></label>
+          <label class="place"><input type="checkbox" name="food" id="food-tenno" value="Tenno Sushi Lounge"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Tenno Sushi Lounge</span><span class="place-meta">Sushi, Ramen &amp; Thai</span></span><span class="place-rating"><span class="star" aria-hidden="true">★</span> 4,6<span class="sr-only"> Sterne</span></span></span></label>
+          <label class="place"><input type="checkbox" name="food" id="food-clubkaiser" value="Club Kaiser"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Club Kaiser</span><span class="place-meta">Sushi &amp; Korean BBQ mit Skybar</span></span><span class="place-rating"><span class="star" aria-hidden="true">★</span> 4,7<span class="sr-only"> Sterne</span></span></span></label>
+          <label class="place"><input type="checkbox" name="food" id="food-delphi" value="Delphi"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Delphi</span><span class="place-meta">Griechisch · Lamm &amp; Grill</span></span><span class="place-rating"><span class="star" aria-hidden="true">★</span> 4,7<span class="sr-only"> Sterne</span></span></span></label>
+          <label class="place"><input type="checkbox" name="food" id="food-enchilada" value="Enchilada"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Enchilada</span><span class="place-meta">Mexikanisch · Tacos, Burritos &amp; Cocktails</span></span><span class="place-rating"><span class="star" aria-hidden="true">★</span> 4,8<span class="sr-only"> Sterne</span></span></span></label>
+          <label class="place"><input type="checkbox" name="food" id="food-burgerheart" value="Burgerheart"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Burgerheart</span><span class="place-meta">Burger · handgemacht</span></span><span class="place-rating"><span class="star" aria-hidden="true">★</span> 4,4<span class="sr-only"> Sterne</span></span></span></label>
+          <label class="place"><input type="checkbox" name="food" id="food-lemongrass" value="Lemongrass"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Lemongrass</span><span class="place-meta">Thai · Schlemmerblock-Award 2026</span></span><span class="place-rating"><span class="star" aria-hidden="true">★</span> 4,0<span class="sr-only"> Sterne</span></span></span></label>
+          <label class="place"><input type="checkbox" name="food" id="food-masalaart" value="Masala Art"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Masala Art</span><span class="place-meta">Indisch · Currys &amp; Reisgerichte</span></span><span class="place-rating"><span class="star" aria-hidden="true">★</span> 4,5<span class="sr-only"> Sterne</span></span></span></label>
+          <label class="place place-surprise"><input type="checkbox" name="food" id="food-ueberrasch" value="Überrasch mich"><span class="place-face"><span class="chip-mark" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2.6 6.3l2.2 2.2 4.6-4.9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="place-text"><span class="place-name">Überrasch mich</span><span class="place-meta">Such du was Schönes aus.</span></span></span></label>
         </div>
+        <p class="places-note">Alle mit 4 bis 5 Sternen bewertet (Google, Tripadvisor, OpenTable · Stand: Oktober 2026)</p>
       </fieldset>
 
       <div class="fields">
@@ -1134,9 +1145,9 @@
   function buildMessage(c) {
     var lines = ['Spa-Wochenende 15.–17. Januar ❤️'];
     if (c.foods.length) {
-      lines.push('Worauf ich Lust hab: ' + c.foods.join(', ') + (c.surprise ? ' – oder überrasch mich!' : ''));
+      lines.push('Da würde ich gern essen: ' + c.foods.join(', ') + (c.surprise ? ' – oder überrasch mich!' : ''));
     } else if (c.surprise) {
-      lines.push('Worauf ich Lust hab: Überrasch mich!');
+      lines.push('Beim Restaurant: Überrasch mich!');
     }
     if (c.wish) lines.push((c.foods.length || c.surprise ? 'Sonst noch: ' : 'Mein Wunsch: ') + c.wish);
     if (c.dislike) lines.push('Lieber nicht: ' + c.dislike);
